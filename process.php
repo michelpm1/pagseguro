@@ -53,9 +53,6 @@ $plugin       =  enrol_get_plugin('pagseguro');
 $email        =  $plugin->get_config('pagsegurobusiness');
 $token        =  $plugin->get_config('pagsegurotoken');
 
-$logdir       =  dirname(__FILE__).'/logs';
-$logfile      =  "$logdir/translogs.txt"; // "$logdir/logs.txt";
-
 $error_returnurl   = $CFG->wwwroot.'/enrol/pagseguro/return.php';
 $success_returnurl = $CFG->wwwroot.'/enrol/pagseguro/return.php';
 
@@ -77,7 +74,7 @@ $item_amount  =  number_format($item_cost, 2);
 $redirect_url =  $CFG->wwwroot.'/enrol/pagseguro/process.php';
 $submitValue  =  get_string("sendpaymentbutton", "enrol_pagseguro");
 
-if(isset($_POST['formsubmit'])) {
+if(isset($_POST['submitbutton'])) {
 	$url = "https://ws.sandbox.pagseguro.uol.com.br/v2/checkout/?email=" . $email . "&token=" . $token;
 
 	$xml = "<?xml version=\"1.0\" encoding=\"$encoding\" standalone=\"yes\"?>
@@ -104,9 +101,8 @@ if(isset($_POST['formsubmit'])) {
 
 	curl_close($curl);
 
-	if($xml == 'Unauthorized'){
+	if ($xml == 'Unauthorized') {
 		//Insira seu código avisando que o sistema está com problemas, sugiro enviar um e-mail avisando para alguém fazer a manutenção
-		unlink($logfile);
 		$error_returnurl .= "?id=$courseid&error=1";
 		header("Location: $error_returnurl");
 		exit;//Mantenha essa linha

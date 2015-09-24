@@ -51,6 +51,7 @@ $fullname = format_string($course->fullname, true, array('context' => $context))
 if (is_enrolled($context, NULL, '', true)) { // TODO: use real pagseguro check.
     redirect($destination, get_string('paymentthanks', '', $fullname));
 } else if (isset($error) && in_array($error, array(1, 2))) {
+    $PAGE->set_context($context);
     $PAGE->set_url($destination);
     echo $OUTPUT->header();
     $a = new stdClass();
