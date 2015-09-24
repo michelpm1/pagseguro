@@ -39,6 +39,7 @@ class enrol_pagseguro_edit_form extends moodleform {
         $mform->addElement('header', 'header', get_string('pluginname', 'enrol_pagseguro'));
 
         $mform->addElement('text', 'name', get_string('custominstancename', 'enrol'));
+        $mform->setType('name', PARAM_TEXT);
 
         $options = array(ENROL_INSTANCE_ENABLED  => get_string('yes'),
                          ENROL_INSTANCE_DISABLED => get_string('no'));
@@ -46,19 +47,12 @@ class enrol_pagseguro_edit_form extends moodleform {
         $mform->setDefault('status', $plugin->get_config('status'));
 
         $mform->addElement('text', 'cost', get_string('cost', 'enrol_pagseguro'), array('size'=>4));
+        $mform->setType('cost', PARAM_RAW);
         $mform->setDefault('cost', $plugin->get_config('cost'));
 
-        /*$pagsegurocurrencies = array('BRL' => 'Brazilian Real',
-        						  'USD' => 'US Dollars',
-                                  'EUR' => 'Euros',
-                                  'JPY' => 'Japanese Yen',
-                                  'GBP' => 'British Pounds',
-                                  'CAD' => 'Canadian Dollars',
-                                  'AUD' => 'Australian Dollars'
-                                 );
-        $mform->addElement('select', 'currency', get_string('currency', 'enrol_pagseguro'), $pagsegurocurrencies);
+        $mform->addElement('select', 'currency', get_string('currency', 'enrol_pagseguro'),
+                           \get_string_manager()->get_list_of_currencies());
         $mform->setDefault('currency', $plugin->get_config('currency'));
-		*/
         
         if ($instance->id) {
             $roles = get_default_enrol_roles($context, $instance->roleid);
@@ -82,7 +76,10 @@ class enrol_pagseguro_edit_form extends moodleform {
         $mform->addHelpButton('enrolenddate', 'enrolenddate', 'enrol_pagseguro');
 
         $mform->addElement('hidden', 'id');
+        $mform->setType('id', PARAM_INT);
+
         $mform->addElement('hidden', 'courseid');
+        $mform->setType('courseid', PARAM_INT);
 
         $this->add_action_buttons(true, ($instance->id ? null : get_string('addinstance', 'enrol')));
 

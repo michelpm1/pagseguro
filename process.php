@@ -127,29 +127,12 @@ if(isset($_POST['formsubmit'])) {
 
 foreach ($_POST as $key => $value)
 {
-	file_put_contents($logfile, $key . ' '.$value. "\n", FILE_APPEND );
 }
 
 // Checks the kind of notification.
 if(isset($_POST['notificationType'])) {
 	$notificationPostCode = !empty($_POST['notificationCode']) ? $_POST['notificationCode'] : null;
 	$notificationType     = !empty($_POST['notificationType']) ? $_POST['notificationType'] : null;
-	file_put_contents($logfile, "notificationCode $notificationPostCode\n", FILE_APPEND);
-	file_put_contents($logfile, "notificationType $notificationType\n", FILE_APPEND);
-}
-
-$handle = fopen($logfile, "r");
-if ($handle) {
-	while (($buffer = fgets($handle, 4096)) !== false) {
-		if($buffer) {
-			list( $key, $value ) = explode( ' ', $buffer);
-			$postdata[$key] = trim(htmlentities($value));
-		}
-	}
-	if (!feof($handle)) {
-		echo "Error: unexpected fgets() fail\n";
-	}
-	fclose($handle);
 }
 
 $notificationCode = !empty($postdata['notificationCode']) ? trim($postdata['notificationCode']) : null;

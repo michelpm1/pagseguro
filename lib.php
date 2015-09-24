@@ -104,7 +104,7 @@ class enrol_pagseguro_plugin extends enrol_plugin {
 
         if (has_capability('enrol/pagseguro:config', $context)) {
             $editlink = new moodle_url("/enrol/pagseguro/edit.php", array('courseid'=>$instance->courseid, 'id'=>$instance->id));
-            $icons[] = $OUTPUT->action_icon($editlink, new pix_icon('i/edit', get_string('edit'), 'core', array('class'=>'icon')));
+            $icons[] = $OUTPUT->action_icon($editlink, new pix_icon('t/edit', get_string('edit'), 'core', array('class'=>'icon')));
         }
 
         return $icons;
@@ -189,6 +189,7 @@ class enrol_pagseguro_plugin extends enrol_plugin {
                 echo '<p><a href="'.$wwwroot.'/login/">'.get_string('loginsite').'</a></p>';
                 echo '</div>';
             } else {
+                require_once("$CFG->dirroot/enrol/pagseguro/locallib.php");
                 //Sanitise some fields before building the pagseguro form
                 $coursefullname  = format_string($course->fullname, true, array('context'=>$context));
                 $courseshortname = $shortname;
@@ -199,12 +200,39 @@ class enrol_pagseguro_plugin extends enrol_plugin {
                 $usercity        = $USER->city;
                 $instancename    = $this->get_instance_name($instance);
 
-                include($CFG->dirroot.'/enrol/pagseguro/enrol.html');
+                $form = new enrol_pagseguro_enrol_form($CFG->wwwroot.'/enrol/pagseguro/process.php', $instance);
+
+                ob_start();
+                $form->display();
+                $output = ob_get_clean();
+                return $OUTPUT->box($output);
             }
 
         }
 
         return $OUTPUT->box(ob_get_clean());
+    }
+
+    /**
+     * Is it possible to delete enrol instance via standard UI?
+     *
+     * @param stdClass $instance
+     * @return bool
+     */
+    public function can_delete_instance($instance) {
+        $context = context_course::instance($instance->courseid);
+        return has_capability('enrol/self:config', $context);
+    }
+
+    /**
+     * Is it possible to hide/show enrol instance via standard UI?
+     *
+     * @param stdClass $instance
+     * @return bool
+     */
+    public function can_hide_show_instance($instance) {
+        $context = context_course::instance($instance->courseid);
+        return has_capability('enrol/pagseguro:config', $context);
     }
 
 }
