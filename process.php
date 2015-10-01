@@ -29,7 +29,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-header("access-control-allow-origin: https://sandbox.pagseguro.uol.com.br");
+header("access-control-allow-origin: https://ws.pagseguro.uol.com.br");
 require('../../config.php');
 global $CFG, $DB,$USER;
 require_once("lib.php");
@@ -67,7 +67,6 @@ $encoding     =  'UTF-8';
 $item_id      =  $courseid;
 $item_desc    =  !empty($course->fullname) ? $course->fullname : null;
 $item_qty     =  (int)1;
-$item_weight  =  1000;
 $item_cost    =  !empty($plugin_instance->cost) ? $plugin_instance->cost : 0;
 $item_amount  =  number_format($item_cost, 2);
 
@@ -77,7 +76,7 @@ $submitValue  =  get_string("sendpaymentbutton", "enrol_pagseguro");
 $submited = optional_param('submitbutton', 1, PARAM_INT);
 
 if($submited) {
-    $url = "https://ws.sandbox.pagseguro.uol.com.br/v2/checkout/?email=" . $email . "&token=" . $token;
+    $url = "https://ws.pagseguro.uol.com.br/v2/checkout/?email=" . $email . "&token=" . $token;
 
     $xml = "<?xml version=\"1.0\" encoding=\"$encoding\" standalone=\"yes\"?>
         <checkout>
@@ -89,7 +88,6 @@ if($submited) {
                     <description>$item_desc</description>
                     <amount>$item_amount</amount>
                     <quantity>$item_qty</quantity>
-                    <weight>$item_weight</weight>
                 </item>
             </items>
         </checkout>";
@@ -119,7 +117,7 @@ if($submited) {
         exit;
     }
 
-    header('Location: https://sandbox.pagseguro.uol.com.br/v2/checkout/payment.html?code='.$xml->code);
+    header('Location: https://ws.pagseguro.uol.com.br/v2/checkout/payment.html?code='.$xml->code);
 }
 
 // Checks the kind of notification.
@@ -133,7 +131,7 @@ $notificationCode = !empty($postdata['notificationCode']) ? trim($postdata['noti
 if (!empty($notificationCode)) {
     $transaction = null;
     // Sets the web service URL.
-    $url = "https://ws.sandbox.pagseguro.uol.com.br/v2/transactions/notifications/" . $notificationCode . "?email=".$email."&token=".$token;
+    $url = "https://ws.pagseguro.uol.com.br/v2/transactions/notifications/" . $notificationCode . "?email=".$email."&token=".$token;
 
     $curl = curl_init($url);
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
