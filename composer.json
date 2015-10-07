@@ -15,6 +15,9 @@
             "email": "danielneis@gmail.com"
         }
     ],
+    "require": {
+        "composer/installers": "*"
+    },
     "extra": {
         "installer-name": "pagseguro"
     }
