@@ -15,6 +15,10 @@ Feature: Users can auto-enrol themself in courses where pagseguro enrolment is a
     And the following "course enrolments" exist:
       | user | course | role |
       | teacher1 | C1 | editingteacher |
+    And I log in as "admin"
+    And I navigate to "Manage enrol plugins" node in "Site administration > Plugins > Enrolments"
+    And I click on "Enable" "link" in the "PagSeguro" "table_row"
+    And I log out
 
   # Note: Please keep the javascript tag on this Scenario to ensure that we
   # test use of the singleselect functionality.
