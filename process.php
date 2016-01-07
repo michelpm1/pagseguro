@@ -64,9 +64,9 @@ $courseid     =  (int)$courseid;
 $currency     =  $plugin->get_config('currency');
 $encoding     =  'UTF-8';
 $item_id      =  $courseid;
-$item_desc    =  !empty($course->fullname) ? $course->fullname : null;
+$item_desc    =  empty($course->fullname) ? null: $course->fullname;
 $item_qty     =  (int)1;
-$item_cost    =  !empty($plugin_instance->cost) ? $plugin_instance->cost : 0;
+$item_cost    =  empty($plugin_instance->cost) ? 0.00 : number_format($plugin_instance->cost, 2);
 $item_amount  =  $item_cost;
 
 $redirect_url =  $CFG->wwwroot.'/enrol/pagseguro/process.php';
@@ -138,7 +138,7 @@ if (!empty($notificationCode)) {
     $transaction = curl_exec($curl);
     curl_close($curl);
 
-    if($transaction == 'Unauthorized'){
+    if ($transaction == 'Unauthorized'){
         //Insira seu código avisando que o sistema está com problemas, sugiro enviar um e-mail avisando para alguém fazer a manutenção
         exit;//Mantenha essa linha
     } else {
