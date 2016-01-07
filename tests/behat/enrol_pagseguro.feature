@@ -20,6 +20,7 @@ Feature: Users can auto-enrol themself in courses where pagseguro enrolment is a
     And I add "PagSeguro" enrolment method with:
       | Custom instance name | Test student enrolment |
       | Enrol cost           | 1                      |
+      | Currency             | BRL                    |
     And I log out
     And I am on homepage
 
