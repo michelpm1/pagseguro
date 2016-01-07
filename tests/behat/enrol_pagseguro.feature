@@ -40,12 +40,14 @@ Feature: Users can auto-enrol themself in courses where pagseguro enrolment is a
     And I log in as "student1"
     And I am on site homepage
     And I follow "Course 1"
-    And I press "Send payment with PagSeguro"
+    And I press "Send payment via PagSeguro"
     Then I should see "Topic 1"
     And I should not see "Enrolment options"
 
   Scenario: PagSeguro-enrolment disabled
-    Given I log in as "student1"
+    Given I log out
+    And I am on homepage
+    When I log in as "student1"
     And I am on site homepage
     When I follow "Course 1"
     Then I should see "You can not enrol yourself in this course"
