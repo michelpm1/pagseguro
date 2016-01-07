@@ -46,7 +46,6 @@ define('COMMERCE_PAYMENT_STATUS_SUCCESS', 'success');
 define('COMMERCE_PAYMENT_STATUS_FAILURE', 'failure') ;
 define('COMMERCE_PAYMENT_STATUS_PENDING', 'pending');
 
-$postdata     =  array();
 $userid       =  $USER->id;
 $plugin       =  enrol_get_plugin('pagseguro');
 $email        =  $plugin->get_config('pagsegurobusiness');
@@ -55,24 +54,26 @@ $token        =  $plugin->get_config('pagsegurotoken');
 $error_returnurl   = $CFG->wwwroot.'/enrol/pagseguro/return.php';
 $success_returnurl = $CFG->wwwroot.'/enrol/pagseguro/return.php';
 
-$instance_id  =  required_param('instanceid', PARAM_INT);
+$instance_id  = required_param('instanceid', PARAM_INT);
 $plugin_instance = $DB->get_record("enrol", array("id"=>$instance_id, "status"=>0));
 
-$courseid     =  required_param('courseid', PARAM_INT);
-$course       =  $DB->get_record('course', array('id'=>$courseid));
-$courseid     =  (int)$courseid;
-$currency     =  $plugin->get_config('currency');
-$encoding     =  'UTF-8';
-$item_id      =  $courseid;
-$item_desc    =  empty($course->fullname) ? null: $course->fullname;
-$item_qty     =  (int)1;
-$item_cost    =  empty($plugin_instance->cost) ? 0.00 : number_format($plugin_instance->cost, 2);
-$item_amount  =  $item_cost;
+$courseid     = required_param('courseid', PARAM_INT);
+$course       = $DB->get_record('course', array('id' => $courseid));
+$currency     = $plugin->get_config('currency');
+$encoding     = 'UTF-8';
+$item_id      = $courseid;
+$item_desc    = empty($course->fullname) ? null: $course->fullname;
+$item_qty     = (int)1;
+$item_cost    = empty($plugin_instance->cost) ? 0.00 : number_format($plugin_instance->cost, 2);
+$item_amount  = $item_cost;
 
 $redirect_url =  $CFG->wwwroot.'/enrol/pagseguro/process.php';
 $submitValue  =  get_string("sendpaymentbutton", "enrol_pagseguro");
 
 $submited = optional_param('usersubmited', 1, PARAM_INT);
+
+$notificationType = optional_param('notificationType', '', PARAM_RAW);
+$notificationCode = optional_param('notificationCode', '', PARAM_RAW);
 
 if ($submited) {
     $url = "https://ws.pagseguro.uol.com.br/v2/checkout/?email=" . urlencode($email) . "&token=" . $token;
@@ -102,7 +103,7 @@ if ($submited) {
 
     if ($xml == 'Unauthorized') {
         // Error=1 Não autorizado.
-        $error_returnurl .= "?id=$courseid&error=1";
+        $error_returnurl .= "?id={$courseid}&error=1";
         header("Location: $error_returnurl");
         exit; // Mantenha essa linha
     }
@@ -111,21 +112,13 @@ if ($submited) {
 
     if (count($xml->error) > 0) {
         // Error=2 Erro genérico.
-        $error_returnurl .= "?id=$courseid&error=2";
+        $error_returnurl .= "?id={$courseid}&error=2";
         header("Location: $error_returnurl");
         exit;
     }
 
     header('Location: https://pagseguro.uol.com.br/v2/checkout/payment.html?code='.$xml->code);
 }
-
-// Checks the kind of notification.
-if (isset($_POST['notificationType'])) {
-    $notificationPostCode = !empty($_POST['notificationCode']) ? $_POST['notificationCode'] : null;
-    $notificationType     = !empty($_POST['notificationType']) ? $_POST['notificationType'] : null;
-}
-
-$notificationCode = !empty($postdata['notificationCode']) ? trim($postdata['notificationCode']) : null;
 
 if (!empty($notificationCode)) {
     $transaction = null;
@@ -143,7 +136,7 @@ if (!empty($notificationCode)) {
         exit;//Mantenha essa linha
     } else {
         $transaction_data  = serialize(trim($transaction));
-        process_moodle($transaction_data, $postdata['instanceid'], $postdata['courseid']);
+        process_moodle($transaction_data, $instanceid, $courseid);
     }
 }
 
