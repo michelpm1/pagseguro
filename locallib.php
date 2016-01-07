@@ -45,18 +45,18 @@ class enrol_pagseguro_enrol_form extends moodleform {
                            html_writer::empty_tag('img', array('alt' => get_string('pagseguroaccepted', 'enrol_pagseguro'),
                                                                'src' => $pagseguroimgurl)));
 
-        $mform->addElement('hidden', 'courseid');
+        $mform->addElement('hidden', 'courseid', $instance->courseid);
         $mform->setType('courseid', PARAM_INT);
-        $mform->setDefault('courseid', $instance->courseid);
 
-        $mform->addElement('hidden', 'instanceid');
+        $mform->addElement('hidden', 'instanceid', $instance->id);
         $mform->setType('instanceid', PARAM_INT);
-        $mform->setDefault('instanceid', $instance->id);
 
-        $mform->addElement('hidden', 'cost');
+        $mform->addElement('hidden', 'cost', $instance->cost);
         $mform->setType('cost', PARAM_INT);
-        $mform->setDefault('cost', $instance->courseid);
 
-        $this->add_action_buttons(false, get_string('sendpaymentbutton', 'enrol_pagseguro'));
+        $mform->addElement('hidden', 'usersubmitted', 1);
+        $mform->setType('usersubmitted', PARAM_INT);
+
+        $this->add_action_buttons(false, get_string('sendpaymentbutton', 'enrol_pagseguro'), '1');
     }
 }

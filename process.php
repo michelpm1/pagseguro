@@ -31,7 +31,6 @@
 
 //header("access-control-allow-origin: https://ws.pagseguro.uol.com.br");
 require('../../config.php');
-global $CFG, $DB,$USER;
 require_once("lib.php");
 require_once($CFG->libdir.'/eventslib.php');
 require_once($CFG->libdir.'/enrollib.php');
@@ -73,7 +72,7 @@ $item_amount  =  $item_cost;
 $redirect_url =  $CFG->wwwroot.'/enrol/pagseguro/process.php';
 $submitValue  =  get_string("sendpaymentbutton", "enrol_pagseguro");
 
-$submited = optional_param('submitbutton', 1, PARAM_INT);
+$submited = optional_param('usersubmited', 1, PARAM_INT);
 
 if ($submited) {
     $url = "https://ws.pagseguro.uol.com.br/v2/checkout/?email=" . urlencode($email) . "&token=" . $token;
@@ -101,9 +100,8 @@ if ($submited) {
 
     curl_close($curl);
 
-
     if ($xml == 'Unauthorized') {
-        // Insira seu código avisando que o sistema está com problemas, sugiro enviar um e-mail avisando para alguém fazer a manutenção
+        // Error=1 Não autorizado.
         $error_returnurl .= "?id=$courseid&error=1";
         header("Location: $error_returnurl");
         exit; // Mantenha essa linha
@@ -112,7 +110,7 @@ if ($submited) {
     $xml = simplexml_load_string($xml);
 
     if (count($xml->error) > 0) {
-        // Insira seu código avisando que o sistema está com problemas, sugiro enviar um e-mail avisando para alguém fazer a manutenção, talvez seja útil enviar os códigos de erros.
+        // Error=2 Erro genérico.
         $error_returnurl .= "?id=$courseid&error=2";
         header("Location: $error_returnurl");
         exit;

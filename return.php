@@ -29,10 +29,10 @@ require("../../config.php");
 require_once("$CFG->dirroot/enrol/pagseguro/lib.php");
 
 $id = required_param('id', PARAM_INT);
-$error = optional_param('error', '', PARAM_INT);
+$error = optional_param('error', 0, PARAM_INT);
 
 if (!$course = $DB->get_record("course", array("id"=>$id))) {
-	redirect($CFG->wwwroot);
+    redirect($CFG->wwwroot);
 }
 
 $context = context_course::instance($course->id);
@@ -40,24 +40,35 @@ $context = context_course::instance($course->id);
 require_login();
 
 if (isset($SESSION->wantsurl)) {
-	$destination = $SESSION->wantsurl;
-	unset($SESSION->wantsurl);
+    $destination = $SESSION->wantsurl;
+    unset($SESSION->wantsurl);
 } else {
-	$destination = "$CFG->wwwroot/course/view.php?id=$course->id";
+    $destination = "{$CFG->wwwroot}/course/view.php?id={$course->id}";
 }
 
 $fullname = format_string($course->fullname, true, array('context' => $context));
 
 if (is_enrolled($context, NULL, '', true)) { // TODO: use real pagseguro check.
     redirect($destination, get_string('paymentthanks', '', $fullname));
-} else if (isset($error) && in_array($error, array(1, 2))) {
+
+} else if ($error > 0) {
+
     $PAGE->set_context($context);
     $PAGE->set_url($destination);
     echo $OUTPUT->header();
-    $a = new stdClass();
-    $a->teacher = get_string('defaultcourseteacher');
-    $a->fullname = $fullname;
-    notice(get_string('paymentapiautorizationerror', 'enrol_pagseguro', $a), $destination);
+    switch ($error) {
+        case 1:
+            notice(get_string('error:unauthorized', 'enrol_pagseguro'), $destination);
+            break;
+        case 2:
+            notice(get_string('error:genericerror', 'enrol_pagseguro'), $destination);
+            break;
+        default:
+            notice(get_string('error:unknownerror', 'enrol_pagseguro'), $destination);
+            break;
+    }
+
+
 } else {   /// Somehow they aren't enrolled yet!  :-(
     $PAGE->set_url($destination);
     echo $OUTPUT->header();
