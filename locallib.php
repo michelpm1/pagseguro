@@ -29,7 +29,6 @@ require_once("$CFG->libdir/formslib.php");
 class enrol_pagseguro_enrol_form extends moodleform {
 
     public function definition() {
-        global $USER, $OUTPUT, $CFG;
         $mform = $this->_form;
         $mform = $this->_form;
         $instance = $this->_customdata;
