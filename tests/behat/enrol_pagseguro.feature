@@ -19,10 +19,10 @@ Feature: Users can auto-enrol themself in courses where pagseguro enrolment is a
   # Note: Please keep the javascript tag on this Scenario to ensure that we
   # test use of the singleselect functionality.
   @javascript
-  Scenario: PagSeguro-enrolment enabled as guest
+  Scenario: PagSeguro enrolment enabled as guest
     Given I log in as "teacher1"
     And I follow "Course 1"
-    And I add "PagSeguro enrolment" enrolment method with:
+    And I add "PagSeguro" enrolment method with:
       | Custom instance name | Test student enrolment |
       | Enrol cost           | 1                      |
     And I log out
@@ -32,10 +32,10 @@ Feature: Users can auto-enrol themself in courses where pagseguro enrolment is a
     And I press "Continue"
     And I should see "Log in"
 
-  Scenario: Self-enrolment enabled
+  Scenario: PagSeguro enrolment enabled
     Given I log in as "teacher1"
     And I follow "Course 1"
-    When I add "PagSeguro enrolment" enrolment method with:
+    When I add "PagSeguro" enrolment method with:
       | Custom instance name | Test student enrolment |
     And I log out
     And I log in as "student1"
