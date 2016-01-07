@@ -41,7 +41,7 @@ class enrol_pagseguro_enrol_form extends moodleform {
         $mform->addElement('static', 'paymentrequired', '', get_string('paymentrequired', 'enrol_pagseguro'));
 
         $pagseguroimgurl = "https://p.simg.uol.com.br/out/pagseguro/i/botoes/pagamentos/99x61-pagar-assina.gif";
-        $mform->addElement('static', 'paymentrequired', '', 
+        $mform->addElement('static', 'paymentrequired', '',
                            html_writer::empty_tag('img', array('alt' => get_string('pagseguroaccepted', 'enrol_pagseguro'),
                                                                'src' => $pagseguroimgurl)));
 
