@@ -9,6 +9,12 @@ You can then set an individual price for your course if needed.
 
 This is an updated version based on https://moodle.org/plugins/view.php?plugin=enrol_pagseguro
 
+Install
+-------
+
+You must put this code in the directory moodle/enrol/pagseguro
+You can use git clone for this or download the latest version from github at https://github.com/danielneis/moodle-enrol_pagseguro/archive/update-3.0.zip
+
 Dev Info
 --------
 
