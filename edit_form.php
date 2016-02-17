@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -87,10 +86,7 @@ class enrol_pagseguro_edit_form extends moodleform {
     }
 
     function validation($data, $files) {
-        global $DB, $CFG;
         $errors = parent::validation($data, $files);
-
-        list($instance, $plugin, $context) = $this->_customdata;
 
         if ($data['status'] == ENROL_INSTANCE_ENABLED) {
             if (!empty($data['enrolenddate']) and $data['enrolenddate'] < $data['enrolstartdate']) {

@@ -133,7 +133,9 @@ if (!empty($notificationCode)) {
     curl_close($curl);
 
     if ($transaction == 'Unauthorized'){
-        //Insira seu código avisando que o sistema está com problemas, sugiro enviar um e-mail avisando para alguém fazer a manutenção
+        // Error=1 Não autorizado.
+        $error_returnurl .= "?id={$courseid}&error=1";
+        header("Location: $error_returnurl");
         exit;//Mantenha essa linha
     } else {
         $transaction_data  = serialize(trim($transaction));
