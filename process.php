@@ -54,10 +54,10 @@ $token        =  $plugin->get_config('pagsegurotoken');
 $error_returnurl   = $CFG->wwwroot.'/enrol/pagseguro/return.php';
 $success_returnurl = $CFG->wwwroot.'/enrol/pagseguro/return.php';
 
-$instance_id  = required_param('instanceid', PARAM_INT);
-$plugin_instance = $DB->get_record("enrol", array("id"=>$instance_id, "status"=>0));
+$instanceid  = optional_param('instanceid', 0, PARAM_INT); // It is passed to PagSeguro in redirect_url, so always exist.
 
-$courseid     = required_param('courseid', PARAM_INT);
+$plugin_instance = $DB->get_record("enrol", array("id" => $instanceid, "status" => 0));
+$courseid     = $plugin_instance->courseid;
 $course       = $DB->get_record('course', array('id' => $courseid));
 $currency     = $plugin->get_config('currency');
 $encoding     = 'UTF-8';
@@ -65,9 +65,10 @@ $item_id      = $courseid;
 $item_desc    = empty($course->fullname) ? null: $course->fullname;
 $item_qty     = (int)1;
 $item_cost    = empty($plugin_instance->cost) ? 0.00 : number_format($plugin_instance->cost, 2);
+$item_cost    = str_replace(',', '', $item_cost);
 $item_amount  = $item_cost;
 
-$redirect_url =  $CFG->wwwroot.'/enrol/pagseguro/process.php';
+$redirect_url =  $CFG->wwwroot.'/enrol/pagseguro/process.php?instanceid='.$instanceid;
 $submitValue  =  get_string("sendpaymentbutton", "enrol_pagseguro");
 
 $submited = optional_param('usersubmited', 1, PARAM_INT);
@@ -105,13 +106,12 @@ if ($submited) {
         // Error=1 Não autorizado.
         $error_returnurl .= "?id={$courseid}&error=1";
         header("Location: $error_returnurl");
-        exit; // Mantenha essa linha
+        exit;
     }
 
     $xml = simplexml_load_string($xml);
 
     if (count($xml->error) > 0) {
-        // Error=2 Erro genérico.
         $error_returnurl .= "?id={$courseid}&error=2";
         header("Location: $error_returnurl");
         exit;
@@ -120,6 +120,7 @@ if ($submited) {
     header('Location: https://pagseguro.uol.com.br/v2/checkout/payment.html?code='.$xml->code);
 }
 
+// Here is the return from PagSeguro.
 if (!empty($notificationCode)) {
     $transaction = null;
     // Sets the web service URL.
