@@ -17,15 +17,17 @@
 /**
  * pagseguro enrolment plugin version specification.
  *
- * @package    enrol
- * @subpackage pagseguro
+ * @package    enrol_pagseguro
  * @copyright  2010 Eugene Venter
+ * @copyright  2015 Daniel Neis Araujo
  * @author     Eugene Venter
+ * @author     Daniel Neis Araujo <danielneis@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2011112901;        // The current plugin version (Date: YYYYMMDDXX)
+$plugin->version   = 2016022900;        // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires  = 2011112901;        // Requires this Moodle version
+$plugin->release   = '2';
 $plugin->component = 'enrol_pagseguro';    // Full name of the plugin (used for diagnostics)

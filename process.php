@@ -54,7 +54,7 @@ $token        =  $plugin->get_config('pagsegurotoken');
 $error_returnurl   = $CFG->wwwroot.'/enrol/pagseguro/return.php';
 $success_returnurl = $CFG->wwwroot.'/enrol/pagseguro/return.php';
 
-$instanceid  = optional_param('instanceid', 0, PARAM_INT); // It is passed to PagSeguro in redirect_url, so always exist.
+$instanceid  = optional_param('instanceid', 0, PARAM_INT);
 
 $plugin_instance = $DB->get_record("enrol", array("id" => $instanceid, "status" => 0));
 $courseid     = $plugin_instance->courseid;
@@ -71,10 +71,12 @@ $item_amount  = $item_cost;
 $redirect_url =  $CFG->wwwroot.'/enrol/pagseguro/process.php?instanceid='.$instanceid;
 $submitValue  =  get_string("sendpaymentbutton", "enrol_pagseguro");
 
-$submited = optional_param('usersubmited', 1, PARAM_INT);
+$submited = optional_param('usersubmited', 0, PARAM_INT);
 
 $notificationType = optional_param('notificationType', '', PARAM_RAW);
 $notificationCode = optional_param('notificationCode', '', PARAM_RAW);
+
+$transactionid = optional_param('transaction_id', '', PARAM_RAW);
 
 if ($submited) {
     $url = "https://ws.pagseguro.uol.com.br/v2/checkout/?email=" . urlencode($email) . "&token=" . $token;
@@ -120,11 +122,33 @@ if ($submited) {
     header('Location: https://pagseguro.uol.com.br/v2/checkout/payment.html?code='.$xml->code);
 }
 
-// Here is the return from PagSeguro.
+// Here the user was redirected back from PagSeguro with transaction_id informed on GET.
+if ($transactionid) {
+    $url = "https://ws.pagseguro.uol.com.br/v2/transactions/{$transactionid}?email={$email}&token={$token}";
+
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    $transaction = curl_exec($curl);
+    curl_close($curl);
+
+    if ($transaction == 'Unauthorized'){
+        // Error=1 Não autorizado.
+        $error_returnurl .= "?id={$courseid}&error=1";
+        header("Location: $error_returnurl");
+        exit;//Mantenha essa linha
+    } else {
+        $transaction_data  = serialize(trim($transaction));
+        process_moodle($transaction_data, $instanceid, $courseid);
+    }
+
+}
+
+// Here is old notification system the return from PagSeguro.
 if (!empty($notificationCode)) {
     $transaction = null;
     // Sets the web service URL.
-    $url = "https://pagseguro.uol.com.br/v2/transactions/notifications/" . $notificationCode . "?email=".$email."&token=".$token;
+    $url = "https://ws.pagseguro.uol.com.br/v2/transactions/notifications/" . $notificationCode . "?email=".$email."&token=".$token;
 
     $curl = curl_init($url);
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -260,8 +284,9 @@ function process_moodle($transaction_data, $instanceid, $cid) {
 
     if (!in_array($data->status, array(COMMERCE_PAGSEGURO_STATUS_IN_ANALYSIS, COMMERCE_PAGSEGURO_STATUS_PAID, COMMERCE_PAGSEGURO_STATUS_AVAILABLE))) {
         $plugin->unenrol_user($plugin_instance, $data->userid);
-        message_pagseguro_error_to_admin("Status not completed or pending. User unenrolled from course", $data);
-        return false;
+        message_pagseguro_error_to_admin("Status not completed or pending. User unenrolled from course", serialize($data));
+        $error_returnurl .= "?id={$courseid}&waiting=1";
+        header("Location: $error_returnurl");
     }
 
     /*if ($existing = $DB->get_record("enrol_pagseguro", array("txn_id"=>$data->txn_id))) {   // Make sure this transaction doesn't exist already
