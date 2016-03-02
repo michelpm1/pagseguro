@@ -71,7 +71,7 @@ $item_amount  = $item_cost;
 $redirect_url =  $CFG->wwwroot.'/enrol/pagseguro/process.php?instanceid='.$instanceid;
 $submitValue  =  get_string("sendpaymentbutton", "enrol_pagseguro");
 
-$submited = optional_param('usersubmited', 0, PARAM_INT);
+$submited = optional_param('submitbutton', 0, PARAM_INT);
 
 $notificationType = optional_param('notificationType', '', PARAM_RAW);
 $notificationCode = optional_param('notificationCode', '', PARAM_RAW);
