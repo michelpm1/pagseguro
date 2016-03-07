@@ -284,7 +284,7 @@ function process_moodle($transaction_data, $instanceid, $cid) {
 
     if (!in_array($data->status, array(COMMERCE_PAGSEGURO_STATUS_IN_ANALYSIS, COMMERCE_PAGSEGURO_STATUS_PAID, COMMERCE_PAGSEGURO_STATUS_AVAILABLE))) {
         $plugin->unenrol_user($plugin_instance, $data->userid);
-        message_pagseguro_error_to_admin("Status not completed or pending. User unenrolled from course", serialize($data));
+        message_pagseguro_error_to_admin("Status not completed or pending. User unenrolled from course", $data);
         $error_returnurl .= "?id={$courseid}&waiting=1";
         header("Location: $error_returnurl");
     }
@@ -404,9 +404,7 @@ function message_pagseguro_error_to_admin($subject, $data) {
 
     $message = "$site->fullname:  Transaction failed.\n\n$subject\n\n";
 
-    foreach ($data as $key => $value) {
-        $message .= "$key => $value\n";
-    }
+    $message .= serialize($data);
 
     $eventdata = new stdClass();
     $eventdata->modulename        = 'moodle';
