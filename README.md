@@ -15,6 +15,15 @@ Install
 You must put this code in the directory moodle/enrol/pagseguro
 You can use git clone for this or download the latest version from github at https://github.com/danielneis/moodle-enrol_pagseguro/archive/update-3.0.zip
 
+Configure
+---------
+
+* First, enable the plugin at Administration block > Site Administration > Plugins > Enrolments > Manage enrol plugins
+* Then, go to its settings
+* You must create a token at the PagSeguro website and use it to configure your Moodle plugin.
+* Also, at the PagSeguro website, you should set the field "Código de transação para página de redirecionamento" with "transaction_id" (without quotes).
+* Now you can go to any course and add the PagSeguro enrol method. There you will set the cost, currency and the email for the PagSeguro account that will be credited.
+
 Dev Info
 --------
 
