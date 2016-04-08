@@ -51,17 +51,14 @@ class enrol_pagseguro_plugin extends enrol_plugin {
     }
 
     public function roles_protected() {
-        // users with role assign cap may tweak the roles later
         return false;
     }
 
     public function allow_unenrol(stdClass $instance) {
-        // users with unenrol cap may unenrol other users manually - requires enrol/pagseguro:unenrol
         return true;
     }
 
     public function allow_manage(stdClass $instance) {
-        // users with manage cap may tweak period and status - requires enrol/pagseguro:manage
         return true;
     }
 
@@ -122,7 +119,6 @@ class enrol_pagseguro_plugin extends enrol_plugin {
             return null;
         }
 
-        // multiple instances supported - different cost for different roles
         return new moodle_url('/enrol/pagseguro/edit.php', array('courseid' => $courseid));
     }
 
@@ -157,7 +153,7 @@ class enrol_pagseguro_plugin extends enrol_plugin {
         $strloginto = get_string("loginto", "", $shortname);
         $strcourses = get_string("courses");
 
-        // Pass $view=true to filter hidden caps if the user cannot see them
+        // Pass $view=true to filter hidden caps if the user cannot see them.
         if ($users = get_users_by_capability($context, 'moodle/course:update', 'u.*', 'u.id ASC',
                                              '', '', '', '', false, true)) {
             $users = sort_by_roleassignment_authority($users, $context);
@@ -172,16 +168,15 @@ class enrol_pagseguro_plugin extends enrol_plugin {
             $cost = (float) $instance->cost;
         }
 
-        if (abs($cost) < 0.01) { // no cost, other enrolment methods (instances) should be used
+        if (abs($cost) < 0.01) { // No cost, other enrolment methods (instances) should be used.
             echo '<p>'.get_string('nocost', 'enrol_pagseguro').'</p>';
         } else {
 
-            if (isguestuser()) { // force login only for guest user, not real users with guest role
+            if (isguestuser()) { // Force login only for guest user, not real users with guest role.
                 if (empty($CFG->loginhttps)) {
                     $wwwroot = $CFG->wwwroot;
                 } else {
-                    // This actually is not so secure ;-), 'cause we're
-                    // in unencrypted connection...
+                    // This actually is not so secure ;-), 'cause we're in unencrypted connection...
                     $wwwroot = str_replace("http://", "https://", $CFG->wwwroot);
                 }
                 echo '<div class="mdl-align"><p>'.get_string('paymentrequired').'</p>';

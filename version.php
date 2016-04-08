@@ -27,7 +27,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2016030900;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2011112901;        // Requires this Moodle version
+$plugin->version   = 2016030900;
+$plugin->requires  = 2011112901;
 $plugin->release   = '3';
-$plugin->component = 'enrol_pagseguro';    // Full name of the plugin (used for diagnostics)
+$plugin->component = 'enrol_pagseguro';
