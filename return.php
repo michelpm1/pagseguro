@@ -47,7 +47,7 @@ if (isset($SESSION->wantsurl)) {
 
 $fullname = format_string($course->fullname, true, array('context' => $context));
 
-if (is_enrolled($context, NULL, '', true)) { // TODO: use real pagseguro check.
+if (is_enrolled($context, null, '', true)) { // TODO: use real pagseguro check.
     redirect($destination, get_string('paymentthanks', '', $fullname));
 
 } else if ($error > 0) {

@@ -46,10 +46,10 @@ define('COMMERCE_PAYMENT_STATUS_SUCCESS', 'success');
 define('COMMERCE_PAYMENT_STATUS_FAILURE', 'failure') ;
 define('COMMERCE_PAYMENT_STATUS_PENDING', 'pending');
 
-$userid       =  $USER->id;
-$plugin       =  enrol_get_plugin('pagseguro');
-$email        =  $plugin->get_config('pagsegurobusiness');
-$token        =  $plugin->get_config('pagsegurotoken');
+$userid = $USER->id;
+$plugin = enrol_get_plugin('pagseguro');
+$email = $plugin->get_config('pagsegurobusiness');
+$token = $plugin->get_config('pagsegurotoken');
 
 $error_returnurl   = $CFG->wwwroot.'/enrol/pagseguro/return.php';
 $success_returnurl = $CFG->wwwroot.'/enrol/pagseguro/return.php';
@@ -62,14 +62,14 @@ $course       = $DB->get_record('course', array('id' => $courseid));
 $currency     = $plugin->get_config('currency');
 $encoding     = 'UTF-8';
 $item_id      = $courseid;
-$item_desc    = empty($course->fullname) ? null: $course->fullname;
+$item_desc    = empty($course->fullname) ? null : $course->fullname;
 $item_qty     = (int)1;
 $item_cost    = empty($plugin_instance->cost) ? 0.00 : number_format($plugin_instance->cost, 2);
 $item_cost    = str_replace(',', '', $item_cost);
 $item_amount  = $item_cost;
 
-$redirect_url =  $CFG->wwwroot.'/enrol/pagseguro/process.php?instanceid='.$instanceid;
-$submitValue  =  get_string("sendpaymentbutton", "enrol_pagseguro");
+$redirect_url = $CFG->wwwroot.'/enrol/pagseguro/process.php?instanceid='.$instanceid;
+$submitValue  = get_string("sendpaymentbutton", "enrol_pagseguro");
 
 $submited = optional_param('submitbutton', '', PARAM_RAW);
 

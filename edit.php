@@ -57,13 +57,13 @@ if ($instanceid) {
     $instance->courseid = $course->id;
 }
 
-$mform = new enrol_pagseguro_edit_form(NULL, array($instance, $plugin, $context));
+$mform = new enrol_pagseguro_edit_form(null, array($instance, $plugin, $context));
 
 if ($mform->is_cancelled()) {
     redirect($return);
 
 } else if ($data = $mform->get_data()) {
-	
+
     if ($instance->id) {
         $reset = ($instance->status != $data->status);
 
@@ -83,8 +83,10 @@ if ($mform->is_cancelled()) {
         }
 
     } else {
-        $fields = array('status' => $data->status, 'name' => $data->name, 'cost' => $data->cost, 'currency' => $data->currency, 'roleid' => $data->roleid,
-                        'enrolperiod' => $data->enrolperiod, 'enrolstartdate' => $data->enrolstartdate, 'enrolenddate' => $data->enrolenddate);
+        $fields = array('status' => $data->status, 'name' => $data->name, 'cost' => $data->cost,
+                        'currency' => $data->currency, 'roleid' => $data->roleid,
+                        'enrolperiod' => $data->enrolperiod, 'enrolstartdate' => $data->enrolstartdate,
+                        'enrolenddate' => $data->enrolenddate);
         $plugin->add_instance($course, $fields);
     }
 

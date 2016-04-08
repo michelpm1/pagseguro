@@ -119,7 +119,7 @@ class enrol_pagseguro_plugin extends enrol_plugin {
         $context = context_course::instance($courseid);
 
         if (!has_capability('moodle/course:enrolconfig', $context) or !has_capability('enrol/pagseguro:config', $context)) {
-            return NULL;
+            return null;
         }
 
         // multiple instances supported - different cost for different roles
@@ -133,7 +133,7 @@ class enrol_pagseguro_plugin extends enrol_plugin {
      * @param stdClass $instance
      * @return string html text, usually a form in a text box
      */
-    function enrol_page_hook(stdClass $instance) {
+    public function enrol_page_hook(stdClass $instance) {
         global $CFG, $USER, $OUTPUT, $PAGE, $DB;
 
         ob_start();
@@ -190,7 +190,7 @@ class enrol_pagseguro_plugin extends enrol_plugin {
                 echo '</div>';
             } else {
                 require_once("$CFG->dirroot/enrol/pagseguro/locallib.php");
-                //Sanitise some fields before building the pagseguro form
+                // Sanitise some fields before building the pagseguro form.
                 $coursefullname  = format_string($course->fullname, true, array('context' => $context));
                 $courseshortname = $shortname;
                 $userfullname    = fullname($USER);

@@ -16,19 +16,19 @@ Feature: Users can auto-enrol themself in courses where pagseguro enrolment is a
     And I click on "Enable" "link" in the "PagSeguro" "table_row"
     And I am on homepage
     And I follow "Courses"
-    And I follow "Course 1"
+
+  # Note: Please keep the javascript tag on this Scenario to ensure that we
+  # test use of the singleselect functionality.
+  @javascript
+  Scenario: PagSeguro enrolment enabled as guest
+    When I follow "Course 1"
     And I add "PagSeguro" enrolment method with:
       | Custom instance name | Test student enrolment |
       | Enrol cost           | 1                      |
       | Currency             | BRL                    |
     And I log out
     And I am on homepage
-
-  # Note: Please keep the javascript tag on this Scenario to ensure that we
-  # test use of the singleselect functionality.
-  @javascript
-  Scenario: PagSeguro enrolment enabled as guest
-    When I follow "Courses"
+    And I follow "Courses"
     And I follow "Course 1"
     And I press "Log in as a guest"
     Then I should see "Guests cannot access this course. Please log in."
@@ -36,7 +36,14 @@ Feature: Users can auto-enrol themself in courses where pagseguro enrolment is a
     And I should see "Log in"
 
   Scenario: PagSeguro enrolment enabled
-    When I log in as "student1"
+    When I follow "Course 1"
+    And I add "PagSeguro" enrolment method with:
+      | Custom instance name | Test student enrolment |
+      | Enrol cost           | 1                      |
+      | Currency             | BRL                    |
+    And I log out
+    And I am on homepage
+    And I log in as "student1"
     And I am on site homepage
     And I follow "Courses"
     And I follow "Course 1"
@@ -44,7 +51,14 @@ Feature: Users can auto-enrol themself in courses where pagseguro enrolment is a
     And I should see "Send payment via PagSeguro" in the "region-main" "region"
 
   Scenario: PagSeguro-enrolment disabled
-    When I log in as "student1"
+    When I follow "Course 1"
+    And I add "PagSeguro" enrolment method with:
+      | Custom instance name | Test student enrolment |
+      | Enrol cost           | 1                      |
+      | Currency             | BRL                    |
+    And I log out
+    And I am on homepage
+    And I log in as "student1"
     And I am on site homepage
     And I follow "Courses"
     And I follow "Course 1"

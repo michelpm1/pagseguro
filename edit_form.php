@@ -30,7 +30,7 @@ require_once($CFG->libdir.'/formslib.php');
 
 class enrol_pagseguro_edit_form extends moodleform {
 
-    function definition() {
+    public function definition() {
         $mform = $this->_form;
 
         list($instance, $plugin, $context) = $this->_customdata;
@@ -52,7 +52,7 @@ class enrol_pagseguro_edit_form extends moodleform {
         $mform->addElement('select', 'currency', get_string('currency', 'enrol_pagseguro'),
                            \get_string_manager()->get_list_of_currencies());
         $mform->setDefault('currency', $plugin->get_config('currency'));
-        
+
         if ($instance->id) {
             $roles = get_default_enrol_roles($context, $instance->roleid);
         } else {
@@ -60,7 +60,6 @@ class enrol_pagseguro_edit_form extends moodleform {
         }
         $mform->addElement('select', 'roleid', get_string('assignrole', 'enrol_pagseguro'), $roles);
         $mform->setDefault('roleid', $plugin->get_config('roleid'));
-
 
         $mform->addElement('duration', 'enrolperiod', get_string('enrolperiod', 'enrol_pagseguro'), array('optional' => true, 'defaultunit' => 86400));
         $mform->setDefault('enrolperiod', $plugin->get_config('enrolperiod'));
@@ -84,7 +83,7 @@ class enrol_pagseguro_edit_form extends moodleform {
         $this->set_data($instance);
     }
 
-    function validation($data, $files) {
+    public function validation($data, $files) {
         $errors = parent::validation($data, $files);
 
         if ($data['status'] == ENROL_INSTANCE_ENABLED) {
