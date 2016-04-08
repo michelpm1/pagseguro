@@ -14,13 +14,13 @@ Feature: Users can auto-enrol themself in courses where pagseguro enrolment is a
     And I log in as "admin"
     And I navigate to "Manage enrol plugins" node in "Site administration > Plugins > Enrolments"
     And I click on "Enable" "link" in the "PagSeguro" "table_row"
+    And I log out
     And I am on homepage
     And I follow "Courses"
 
-  # Note: Please keep the javascript tag on this Scenario to ensure that we
-  # test use of the singleselect functionality.
   @javascript
   Scenario: PagSeguro enrolment enabled as guest
+    Given I log in as "admin"
     When I follow "Course 1"
     And I add "PagSeguro" enrolment method with:
       | Custom instance name | Test student enrolment |
@@ -35,31 +35,24 @@ Feature: Users can auto-enrol themself in courses where pagseguro enrolment is a
     And I press "Continue"
     And I should see "Log in"
 
+  @javascript
   Scenario: PagSeguro enrolment enabled
-    When I follow "Course 1"
-    And I add "PagSeguro" enrolment method with:
+    Given I log in as "admin"
+    And I follow "Course 1"
+    When I add "PagSeguro" enrolment method with:
       | Custom instance name | Test student enrolment |
       | Enrol cost           | 1                      |
       | Currency             | BRL                    |
     And I log out
-    And I am on homepage
     And I log in as "student1"
     And I am on site homepage
-    And I follow "Courses"
     And I follow "Course 1"
     Then I should see "You must make a payment of BRL 1 via PagSeguro to access this course." in the "region-main" "region"
     And I should see "Send payment via PagSeguro" in the "region-main" "region"
 
+  @javascript
   Scenario: PagSeguro-enrolment disabled
-    When I follow "Course 1"
-    And I add "PagSeguro" enrolment method with:
-      | Custom instance name | Test student enrolment |
-      | Enrol cost           | 1                      |
-      | Currency             | BRL                    |
-    And I log out
-    And I am on homepage
-    And I log in as "student1"
+    Given I log in as "student1"
     And I am on site homepage
-    And I follow "Courses"
-    And I follow "Course 1"
+    When I follow "Course 1"
     Then I should see "You can not enrol yourself in this course" in the "region-main" "region"
