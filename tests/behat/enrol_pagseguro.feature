@@ -21,7 +21,8 @@ Feature: Users can auto-enrol themself in courses where pagseguro enrolment is a
   @javascript
   Scenario: PagSeguro enrolment enabled as guest
     Given I log in as "admin"
-    When I follow "Course 1"
+    When I follow "Courses"
+    And I follow "Course 1"
     And I add "PagSeguro" enrolment method with:
       | Custom instance name | Test student enrolment |
       | Enrol cost           | 1                      |
@@ -38,14 +39,16 @@ Feature: Users can auto-enrol themself in courses where pagseguro enrolment is a
   @javascript
   Scenario: PagSeguro enrolment enabled
     Given I log in as "admin"
+    When I follow "Courses"
     And I follow "Course 1"
-    When I add "PagSeguro" enrolment method with:
+    And I add "PagSeguro" enrolment method with:
       | Custom instance name | Test student enrolment |
       | Enrol cost           | 1                      |
       | Currency             | BRL                    |
     And I log out
     And I log in as "student1"
     And I am on site homepage
+    And I follow "Courses"
     And I follow "Course 1"
     Then I should see "You must make a payment of BRL 1 via PagSeguro to access this course." in the "region-main" "region"
     And I should see "Send payment via PagSeguro" in the "region-main" "region"
@@ -54,5 +57,6 @@ Feature: Users can auto-enrol themself in courses where pagseguro enrolment is a
   Scenario: PagSeguro-enrolment disabled
     Given I log in as "student1"
     And I am on site homepage
-    When I follow "Course 1"
+    When I follow "Courses"
+    And I follow "Course 1"
     Then I should see "You can not enrol yourself in this course" in the "region-main" "region"
