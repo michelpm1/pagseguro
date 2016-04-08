@@ -227,12 +227,12 @@ function process_moodle($transaction_data, $instanceid, $cid) {
 
     // Get the user and course records.
 
-    if (!$user = $DB->get_record("user", array("id"=>$data->userid))) {
+    if (!$user = $DB->get_record("user", array("id" => $data->userid))) {
         message_pagseguro_error_to_admin("Not a valid user id", $data);
         return false;
     }
 
-    if (!$course = $DB->get_record("course", array("id"=>$data->courseid))) {
+    if (!$course = $DB->get_record("course", array("id" => $data->courseid))) {
         message_pagseguro_error_to_admin("Not a valid course id", $data);
         return false;
     }
@@ -242,7 +242,7 @@ function process_moodle($transaction_data, $instanceid, $cid) {
         return false;
     }
 
-    if (!$plugin_instance = $DB->get_record("enrol", array("id"=>$data->instanceid, "status"=>0))) {
+    if (!$plugin_instance = $DB->get_record("enrol", array("id" => $data->instanceid, "status" => 0))) {
         message_pagseguro_error_to_admin("Not a valid instance id", $data);
         return false;
     }
@@ -289,7 +289,7 @@ function process_moodle($transaction_data, $instanceid, $cid) {
         header("Location: $error_returnurl");
     }
 
-    /*if ($existing = $DB->get_record("enrol_pagseguro", array("txn_id"=>$data->txn_id))) {   // Make sure this transaction doesn't exist already
+    /*if ($existing = $DB->get_record("enrol_pagseguro", array("txn_id" => $data->txn_id))) {   // Make sure this transaction doesn't exist already
       message_pagseguro_error_to_admin("Transaction $data->txn_id is being repeated!", $data);
       return false;
       }*/

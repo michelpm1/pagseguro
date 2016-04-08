@@ -30,7 +30,7 @@ require_once("$CFG->dirroot/enrol/pagseguro/lib.php");
 $id = required_param('id', PARAM_INT);
 $error = optional_param('error', 0, PARAM_INT);
 
-if (!$course = $DB->get_record("course", array("id"=>$id))) {
+if (!$course = $DB->get_record("course", array("id" => $id))) {
     redirect($CFG->wwwroot);
 }
 

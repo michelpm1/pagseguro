@@ -45,7 +45,7 @@ class enrol_pagseguro_edit_form extends moodleform {
         $mform->addElement('select', 'status', get_string('status', 'enrol_pagseguro'), $options);
         $mform->setDefault('status', $plugin->get_config('status'));
 
-        $mform->addElement('text', 'cost', get_string('cost', 'enrol_pagseguro'), array('size'=>4));
+        $mform->addElement('text', 'cost', get_string('cost', 'enrol_pagseguro'), array('size' => 4));
         $mform->setType('cost', PARAM_RAW);
         $mform->setDefault('cost', $plugin->get_config('cost'));
 

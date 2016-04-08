@@ -30,16 +30,16 @@ require_once('edit_form.php');
 $courseid   = required_param('courseid', PARAM_INT);
 $instanceid = optional_param('id', 0, PARAM_INT); // instanceid
 
-$course = $DB->get_record('course', array('id'=>$courseid), '*', MUST_EXIST);
+$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $context = context_course::instance($course->id);
 
 require_login($course);
 require_capability('enrol/pagseguro:config', $context);
 
-$PAGE->set_url('/enrol/pagseguro/edit.php', array('courseid'=>$course->id, 'id'=>$instanceid));
+$PAGE->set_url('/enrol/pagseguro/edit.php', array('courseid' => $course->id, 'id' => $instanceid));
 $PAGE->set_pagelayout('admin');
 
-$return = new moodle_url('/enrol/instances.php', array('id'=>$course->id));
+$return = new moodle_url('/enrol/instances.php', array('id' => $course->id));
 if (!enrol_is_enabled('pagseguro')) {
     redirect($return);
 }
@@ -47,11 +47,11 @@ if (!enrol_is_enabled('pagseguro')) {
 $plugin = enrol_get_plugin('pagseguro');
 
 if ($instanceid) {
-    $instance = $DB->get_record('enrol', array('courseid'=>$course->id, 'enrol'=>'pagseguro', 'id'=>$instanceid), '*', MUST_EXIST);
+    $instance = $DB->get_record('enrol', array('courseid' => $course->id, 'enrol' => 'pagseguro', 'id' => $instanceid), '*', MUST_EXIST);
 } else {
     require_capability('moodle/course:enrolconfig', $context);
     // no instance yet, we have to add new instance
-    navigation_node::override_active_url(new moodle_url('/enrol/instances.php', array('id'=>$course->id)));
+    navigation_node::override_active_url(new moodle_url('/enrol/instances.php', array('id' => $course->id)));
     $instance = new stdClass();
     $instance->id       = null;
     $instance->courseid = $course->id;
@@ -83,8 +83,8 @@ if ($mform->is_cancelled()) {
         }
 
     } else {
-        $fields = array('status'=>$data->status, 'name'=>$data->name, 'cost'=>$data->cost, 'currency'=>$data->currency, 'roleid'=>$data->roleid,
-                        'enrolperiod'=>$data->enrolperiod, 'enrolstartdate'=>$data->enrolstartdate, 'enrolenddate'=>$data->enrolenddate);
+        $fields = array('status' => $data->status, 'name' => $data->name, 'cost' => $data->cost, 'currency' => $data->currency, 'roleid' => $data->roleid,
+                        'enrolperiod' => $data->enrolperiod, 'enrolstartdate' => $data->enrolstartdate, 'enrolenddate' => $data->enrolenddate);
         $plugin->add_instance($course, $fields);
     }
 

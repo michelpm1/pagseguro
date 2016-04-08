@@ -82,7 +82,7 @@ class enrol_pagseguro_plugin extends enrol_plugin {
 
         $context = context_course::instance($instance->courseid);
         if (has_capability('enrol/pagseguro:config', $context)) {
-            $managelink = new moodle_url('/enrol/pagseguro/edit.php', array('courseid'=>$instance->courseid, 'id'=>$instance->id));
+            $managelink = new moodle_url('/enrol/pagseguro/edit.php', array('courseid' => $instance->courseid, 'id' => $instance->id));
             $instancesnode->add($this->get_instance_name($instance), $managelink, navigation_node::TYPE_SETTING);
         }
     }
@@ -103,8 +103,8 @@ class enrol_pagseguro_plugin extends enrol_plugin {
         $icons = array();
 
         if (has_capability('enrol/pagseguro:config', $context)) {
-            $editlink = new moodle_url("/enrol/pagseguro/edit.php", array('courseid'=>$instance->courseid, 'id'=>$instance->id));
-            $icons[] = $OUTPUT->action_icon($editlink, new pix_icon('t/edit', get_string('edit'), 'core', array('class'=>'icon')));
+            $editlink = new moodle_url("/enrol/pagseguro/edit.php", array('courseid' => $instance->courseid, 'id' => $instance->id));
+            $icons[] = $OUTPUT->action_icon($editlink, new pix_icon('t/edit', get_string('edit'), 'core', array('class' => 'icon')));
         }
 
         return $icons;
@@ -123,7 +123,7 @@ class enrol_pagseguro_plugin extends enrol_plugin {
         }
 
         // multiple instances supported - different cost for different roles
-        return new moodle_url('/enrol/pagseguro/edit.php', array('courseid'=>$courseid));
+        return new moodle_url('/enrol/pagseguro/edit.php', array('courseid' => $courseid));
     }
 
     /**
@@ -138,7 +138,7 @@ class enrol_pagseguro_plugin extends enrol_plugin {
 
         ob_start();
 
-        if ($DB->record_exists('user_enrolments', array('userid'=>$USER->id, 'enrolid'=>$instance->id))) {
+        if ($DB->record_exists('user_enrolments', array('userid' => $USER->id, 'enrolid' => $instance->id))) {
             return ob_get_clean();
         }
 
@@ -150,7 +150,7 @@ class enrol_pagseguro_plugin extends enrol_plugin {
             return ob_get_clean();
         }
 
-        $course = $DB->get_record('course', array('id'=>$instance->courseid));
+        $course = $DB->get_record('course', array('id' => $instance->courseid));
         $context = context_course::instance($instance->courseid);
 
         $shortname = format_string($course->shortname, true, array('context' => $context));
@@ -191,7 +191,7 @@ class enrol_pagseguro_plugin extends enrol_plugin {
             } else {
                 require_once("$CFG->dirroot/enrol/pagseguro/locallib.php");
                 //Sanitise some fields before building the pagseguro form
-                $coursefullname  = format_string($course->fullname, true, array('context'=>$context));
+                $coursefullname  = format_string($course->fullname, true, array('context' => $context));
                 $courseshortname = $shortname;
                 $userfullname    = fullname($USER);
                 $userfirstname   = $USER->firstname;

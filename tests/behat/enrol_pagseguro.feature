@@ -40,12 +40,12 @@ Feature: Users can auto-enrol themself in courses where pagseguro enrolment is a
     And I am on site homepage
     And I follow "Courses"
     And I follow "Course 1"
-    Then I should see "You must make a payment of BRL 1 via PagSeguro to access this course."
-    And I should see "Send payment via PagSeguro"
+    Then I should see "You must make a payment of BRL 1 via PagSeguro to access this course." in the "region-main" "region"
+    And I should see "Send payment via PagSeguro" in the "region-main" "region"
 
   Scenario: PagSeguro-enrolment disabled
     When I log in as "student1"
     And I am on site homepage
     And I follow "Courses"
     And I follow "Course 1"
-    Then I should see "You can not enrol yourself in this course"
+    Then I should see "You can not enrol yourself in this course" in the "region-main" "region"

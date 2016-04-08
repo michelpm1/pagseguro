@@ -29,7 +29,6 @@ defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
 
-    //--- settings ------------------------------------------------------------------------------------------
     $settings->add(new admin_setting_heading('enrol_pagseguro_settings', '', get_string('pluginname_desc', 'enrol_pagseguro')));
 
     $settings->add(new admin_setting_configtext('enrol_pagseguro/pagsegurobusiness', get_string('businessemail', 'enrol_pagseguro'), get_string('businessemail_desc', 'enrol_pagseguro'), '', PARAM_EMAIL));
@@ -42,7 +41,6 @@ if ($ADMIN->fulltree) {
 
     $settings->add(new admin_setting_configcheckbox('enrol_pagseguro/mailadmins', get_string('mailadmins', 'enrol_pagseguro'), '', 0));
 
-    //--- enrol instance defaults ----------------------------------------------------------------------------
     $settings->add(new admin_setting_heading('enrol_pagseguro_defaults',
         get_string('enrolinstancedefaults', 'admin'), get_string('enrolinstancedefaults_desc', 'admin')));
 
