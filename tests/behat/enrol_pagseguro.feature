@@ -11,12 +11,6 @@ Feature: Users can auto-enrol themself in courses where pagseguro enrolment is a
     And the following "courses" exist:
       | fullname | shortname | format |
       | Course 1 | C1 | topics |
-    And I log in as "admin"
-    And I navigate to "Manage enrol plugins" node in "Site administration > Plugins > Enrolments"
-    And I click on "Enable" "link" in the "PagSeguro" "table_row"
-    And I log out
-    And I am on homepage
-    And I follow "Courses"
 
   @javascript
   Scenario: PagSeguro enrolment enabled as guest
