@@ -21,6 +21,9 @@ Feature: Users can auto-enrol themself in courses where pagseguro enrolment is a
   @javascript
   Scenario: PagSeguro enrolment enabled as guest
     Given I log in as "admin"
+    And I navigate to "Manage enrol plugins" node in "Site administration > Plugins > Enrolments"
+    And I click on "Enable" "link" in the "PagSeguro" "table_row"
+    And I am on homepage
     When I follow "Courses"
     And I follow "Course 1"
     And I add "PagSeguro" enrolment method with:
@@ -39,6 +42,9 @@ Feature: Users can auto-enrol themself in courses where pagseguro enrolment is a
   @javascript
   Scenario: PagSeguro enrolment enabled
     Given I log in as "admin"
+    And I navigate to "Manage enrol plugins" node in "Site administration > Plugins > Enrolments"
+    And I click on "Enable" "link" in the "PagSeguro" "table_row"
+    And I am on homepage
     When I follow "Courses"
     And I follow "Course 1"
     And I add "PagSeguro" enrolment method with:
