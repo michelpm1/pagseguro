@@ -27,4 +27,5 @@ Configure
 Dev Info
 --------
 
+[![Build Status](https://travis-ci.org/danielneis/moodle-enrol_pagseguro.svg?branch=update-3.0)](https://travis-ci.org/danielneis/moodle-enrol_pagseguro)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/danielneis/moodle-enrol_pagseguro/badges/quality-score.png?b=update-3.0)](https://scrutinizer-ci.com/g/danielneis/moodle-enrol_pagseguro/?branch=update-3.0)
