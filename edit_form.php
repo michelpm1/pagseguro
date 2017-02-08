@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -31,7 +30,7 @@ require_once($CFG->libdir.'/formslib.php');
 
 class enrol_pagseguro_edit_form extends moodleform {
 
-    function definition() {
+    public function definition() {
         $mform = $this->_form;
 
         list($instance, $plugin, $context) = $this->_customdata;
@@ -39,27 +38,21 @@ class enrol_pagseguro_edit_form extends moodleform {
         $mform->addElement('header', 'header', get_string('pluginname', 'enrol_pagseguro'));
 
         $mform->addElement('text', 'name', get_string('custominstancename', 'enrol'));
+        $mform->setType('name', PARAM_TEXT);
 
         $options = array(ENROL_INSTANCE_ENABLED  => get_string('yes'),
                          ENROL_INSTANCE_DISABLED => get_string('no'));
         $mform->addElement('select', 'status', get_string('status', 'enrol_pagseguro'), $options);
         $mform->setDefault('status', $plugin->get_config('status'));
 
-        $mform->addElement('text', 'cost', get_string('cost', 'enrol_pagseguro'), array('size'=>4));
+        $mform->addElement('text', 'cost', get_string('cost', 'enrol_pagseguro'), array('size' => 4));
+        $mform->setType('cost', PARAM_RAW);
         $mform->setDefault('cost', $plugin->get_config('cost'));
 
-        /*$pagsegurocurrencies = array('BRL' => 'Brazilian Real',
-        						  'USD' => 'US Dollars',
-                                  'EUR' => 'Euros',
-                                  'JPY' => 'Japanese Yen',
-                                  'GBP' => 'British Pounds',
-                                  'CAD' => 'Canadian Dollars',
-                                  'AUD' => 'Australian Dollars'
-                                 );
-        $mform->addElement('select', 'currency', get_string('currency', 'enrol_pagseguro'), $pagsegurocurrencies);
+        $mform->addElement('select', 'currency', get_string('currency', 'enrol_pagseguro'),
+                           \get_string_manager()->get_list_of_currencies());
         $mform->setDefault('currency', $plugin->get_config('currency'));
-		*/
-        
+
         if ($instance->id) {
             $roles = get_default_enrol_roles($context, $instance->roleid);
         } else {
@@ -67,7 +60,6 @@ class enrol_pagseguro_edit_form extends moodleform {
         }
         $mform->addElement('select', 'roleid', get_string('assignrole', 'enrol_pagseguro'), $roles);
         $mform->setDefault('roleid', $plugin->get_config('roleid'));
-
 
         $mform->addElement('duration', 'enrolperiod', get_string('enrolperiod', 'enrol_pagseguro'), array('optional' => true, 'defaultunit' => 86400));
         $mform->setDefault('enrolperiod', $plugin->get_config('enrolperiod'));
@@ -82,18 +74,17 @@ class enrol_pagseguro_edit_form extends moodleform {
         $mform->addHelpButton('enrolenddate', 'enrolenddate', 'enrol_pagseguro');
 
         $mform->addElement('hidden', 'id');
+        $mform->setType('id', PARAM_INT);
         $mform->addElement('hidden', 'courseid');
+        $mform->setType('courseid', PARAM_INT);
 
         $this->add_action_buttons(true, ($instance->id ? null : get_string('addinstance', 'enrol')));
 
         $this->set_data($instance);
     }
 
-    function validation($data, $files) {
-        global $DB, $CFG;
+    public function validation($data, $files) {
         $errors = parent::validation($data, $files);
-
-        list($instance, $plugin, $context) = $this->_customdata;
 
         if ($data['status'] == ENROL_INSTANCE_ENABLED) {
             if (!empty($data['enrolenddate']) and $data['enrolenddate'] < $data['enrolstartdate']) {

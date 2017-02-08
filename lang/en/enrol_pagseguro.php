@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -44,6 +43,7 @@ $string['enrolperiod_desc'] = 'Default length of time that the enrolment is vali
 $string['enrolperiod_help'] = 'Length of time that the enrolment is valid, starting with the moment the user is enrolled. If disabled, the enrolment duration will be unlimited.';
 $string['enrolstartdate'] = 'Start date';
 $string['enrolstartdate_help'] = 'If enabled, users can be enrolled from this date onward only.';
+$string['error:unauthorized'] = 'This host is not authorized to use PagSeguro API.';
 $string['mailadmins'] = 'Notify admin';
 $string['mailstudents'] = 'Notify students';
 $string['mailteachers'] = 'Notify teachers';
@@ -54,10 +54,10 @@ $string['pagseguro:manage'] = 'Manage enrolled users';
 $string['pagseguro:unenrol'] = 'Unenrol users from course';
 $string['pagseguro:unenrolself'] = 'Unenrol self from the course';
 $string['pagseguroaccepted'] = 'PagSeguro payments accepted';
+$string['paymentrequired'] = 'You must make a payment of {$a->currency} {$a->cost} via PagSeguro to access this course.';
 $string['pluginname'] = 'PagSeguro';
 $string['pluginname_desc'] = 'The PagSeguro module allows you to set up paid courses.  If the cost for any course is zero, then students are not asked to pay for entry.  There is a site-wide cost that you set here as a default for the whole site and then a course setting that you can set for each course individually. The course cost overrides the site cost.';
 $string['sendpaymentbutton'] = 'Send payment via PagSeguro';
 $string['status'] = 'Allow PagSeguro enrolments';
 $string['status_desc'] = 'Allow users to use PagSeguro to enrol into a course by default.';
 $string['unenrolselfconfirm'] = 'Do you really want to unenrol yourself from course "{$a}"?';
-$string['paymentapiautorizationerror'] = 'Enter your code indicating that the system is having problems, I suggest sending an e-mail telling someone to do the maintenance, it might be useful to send the error codes.';

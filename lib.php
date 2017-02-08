@@ -51,17 +51,14 @@ class enrol_pagseguro_plugin extends enrol_plugin {
     }
 
     public function roles_protected() {
-        // users with role assign cap may tweak the roles later
         return false;
     }
 
     public function allow_unenrol(stdClass $instance) {
-        // users with unenrol cap may unenrol other users manually - requires enrol/pagseguro:unenrol
         return true;
     }
 
     public function allow_manage(stdClass $instance) {
-        // users with manage cap may tweak period and status - requires enrol/pagseguro:manage
         return true;
     }
 
@@ -80,9 +77,9 @@ class enrol_pagseguro_plugin extends enrol_plugin {
              throw new coding_exception('Invalid enrol instance type!');
         }
 
-        $context = get_context_instance(CONTEXT_COURSE, $instance->courseid);
+        $context = context_course::instance($instance->courseid);
         if (has_capability('enrol/pagseguro:config', $context)) {
-            $managelink = new moodle_url('/enrol/pagseguro/edit.php', array('courseid'=>$instance->courseid, 'id'=>$instance->id));
+            $managelink = new moodle_url('/enrol/pagseguro/edit.php', array('courseid' => $instance->courseid, 'id' => $instance->id));
             $instancesnode->add($this->get_instance_name($instance), $managelink, navigation_node::TYPE_SETTING);
         }
     }
@@ -98,13 +95,13 @@ class enrol_pagseguro_plugin extends enrol_plugin {
         if ($instance->enrol !== 'pagseguro') {
             throw new coding_exception('invalid enrol instance!');
         }
-        $context = get_context_instance(CONTEXT_COURSE, $instance->courseid);
+        $context = context_course::instance($instance->courseid);
 
         $icons = array();
 
         if (has_capability('enrol/pagseguro:config', $context)) {
-            $editlink = new moodle_url("/enrol/pagseguro/edit.php", array('courseid'=>$instance->courseid, 'id'=>$instance->id));
-            $icons[] = $OUTPUT->action_icon($editlink, new pix_icon('i/edit', get_string('edit'), 'core', array('class'=>'icon')));
+            $editlink = new moodle_url("/enrol/pagseguro/edit.php", array('courseid' => $instance->courseid, 'id' => $instance->id));
+            $icons[] = $OUTPUT->action_icon($editlink, new pix_icon('t/edit', get_string('edit'), 'core', array('class' => 'icon')));
         }
 
         return $icons;
@@ -116,14 +113,13 @@ class enrol_pagseguro_plugin extends enrol_plugin {
      * @return moodle_url page url
      */
     public function get_newinstance_link($courseid) {
-        $context = get_context_instance(CONTEXT_COURSE, $courseid, MUST_EXIST);
+        $context = context_course::instance($courseid);
 
         if (!has_capability('moodle/course:enrolconfig', $context) or !has_capability('enrol/pagseguro:config', $context)) {
-            return NULL;
+            return null;
         }
 
-        // multiple instances supported - different cost for different roles
-        return new moodle_url('/enrol/pagseguro/edit.php', array('courseid'=>$courseid));
+        return new moodle_url('/enrol/pagseguro/edit.php', array('courseid' => $courseid));
     }
 
     /**
@@ -133,12 +129,12 @@ class enrol_pagseguro_plugin extends enrol_plugin {
      * @param stdClass $instance
      * @return string html text, usually a form in a text box
      */
-    function enrol_page_hook(stdClass $instance) {
+    public function enrol_page_hook(stdClass $instance) {
         global $CFG, $USER, $OUTPUT, $PAGE, $DB;
 
         ob_start();
 
-        if ($DB->record_exists('user_enrolments', array('userid'=>$USER->id, 'enrolid'=>$instance->id))) {
+        if ($DB->record_exists('user_enrolments', array('userid' => $USER->id, 'enrolid' => $instance->id))) {
             return ob_get_clean();
         }
 
@@ -150,14 +146,14 @@ class enrol_pagseguro_plugin extends enrol_plugin {
             return ob_get_clean();
         }
 
-        $course = $DB->get_record('course', array('id'=>$instance->courseid));
-        $context = get_context_instance(CONTEXT_COURSE, $course->id);
+        $course = $DB->get_record('course', array('id' => $instance->courseid));
+        $context = context_course::instance($instance->courseid);
 
         $shortname = format_string($course->shortname, true, array('context' => $context));
         $strloginto = get_string("loginto", "", $shortname);
         $strcourses = get_string("courses");
 
-        // Pass $view=true to filter hidden caps if the user cannot see them
+        // Pass $view=true to filter hidden caps if the user cannot see them.
         if ($users = get_users_by_capability($context, 'moodle/course:update', 'u.*', 'u.id ASC',
                                              '', '', '', '', false, true)) {
             $users = sort_by_roleassignment_authority($users, $context);
@@ -172,16 +168,15 @@ class enrol_pagseguro_plugin extends enrol_plugin {
             $cost = (float) $instance->cost;
         }
 
-        if (abs($cost) < 0.01) { // no cost, other enrolment methods (instances) should be used
+        if (abs($cost) < 0.01) { // No cost, other enrolment methods (instances) should be used.
             echo '<p>'.get_string('nocost', 'enrol_pagseguro').'</p>';
         } else {
 
-            if (isguestuser()) { // force login only for guest user, not real users with guest role
+            if (isguestuser()) { // Force login only for guest user, not real users with guest role.
                 if (empty($CFG->loginhttps)) {
                     $wwwroot = $CFG->wwwroot;
                 } else {
-                    // This actually is not so secure ;-), 'cause we're
-                    // in unencrypted connection...
+                    // This actually is not so secure ;-), 'cause we're in unencrypted connection...
                     $wwwroot = str_replace("http://", "https://", $CFG->wwwroot);
                 }
                 echo '<div class="mdl-align"><p>'.get_string('paymentrequired').'</p>';
@@ -189,8 +184,9 @@ class enrol_pagseguro_plugin extends enrol_plugin {
                 echo '<p><a href="'.$wwwroot.'/login/">'.get_string('loginsite').'</a></p>';
                 echo '</div>';
             } else {
-                //Sanitise some fields before building the pagseguro form
-                $coursefullname  = format_string($course->fullname, true, array('context'=>$context));
+                require_once("$CFG->dirroot/enrol/pagseguro/locallib.php");
+                // Sanitise some fields before building the pagseguro form.
+                $coursefullname  = format_string($course->fullname, true, array('context' => $context));
                 $courseshortname = $shortname;
                 $userfullname    = fullname($USER);
                 $userfirstname   = $USER->firstname;
@@ -199,12 +195,39 @@ class enrol_pagseguro_plugin extends enrol_plugin {
                 $usercity        = $USER->city;
                 $instancename    = $this->get_instance_name($instance);
 
-                include($CFG->dirroot.'/enrol/pagseguro/enrol.html');
+                $form = new enrol_pagseguro_enrol_form($CFG->wwwroot.'/enrol/pagseguro/process.php', $instance);
+
+                ob_start();
+                $form->display();
+                $output = ob_get_clean();
+                return $OUTPUT->box($output);
             }
 
         }
 
         return $OUTPUT->box(ob_get_clean());
+    }
+
+    /**
+     * Is it possible to delete enrol instance via standard UI?
+     *
+     * @param stdClass $instance
+     * @return bool
+     */
+    public function can_delete_instance($instance) {
+        $context = context_course::instance($instance->courseid);
+        return has_capability('enrol/self:config', $context);
+    }
+
+    /**
+     * Is it possible to hide/show enrol instance via standard UI?
+     *
+     * @param stdClass $instance
+     * @return bool
+     */
+    public function can_hide_show_instance($instance) {
+        $context = context_course::instance($instance->courseid);
+        return has_capability('enrol/pagseguro:config', $context);
     }
 
 }
